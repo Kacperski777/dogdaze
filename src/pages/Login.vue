@@ -1,3 +1,3 @@
 <template>
-    Login
+    <FormKit type="text" label="Email" />
 </template>
