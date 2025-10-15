@@ -5,6 +5,7 @@ import Home from "../pages/Home.vue";
 import Venues from "../pages/Venues.vue";
 import Login from "../pages/Login.vue";
 import Signup from "../pages/Signup.vue";
+import NotFound from "../pages/NotFound.vue"
 
 const routes = [
   {
@@ -13,8 +14,6 @@ const routes = [
     children: [
       { path: "", name: "Home", component: Home },
       { path: "/venues", component: Venues },
-      { path: "/login", component: Login },
-      { path: "/signup", component: Signup },
     ],
     meta: { requiresAuth: true },
   },
@@ -25,6 +24,11 @@ const routes = [
       { path: "login", name: "Login", component: Login },
       { path: "signup", name: "Signup", component: Signup },
     ],
+  },
+    {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   },
 ];
 
