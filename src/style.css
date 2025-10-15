@@ -1,6 +1,3 @@
 @import "tailwindcss";
 
-@theme {
-  /* Override neutral-300 to black */
-  --color-neutral-300: #000000;
-}
+@custom-variant dark (&:where(.dark, .dark *));
