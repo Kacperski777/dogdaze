@@ -16,9 +16,8 @@ const routes = [
     children: [
       { path: "", name: "Home", component: Home },
       { path: "/venues", name: "Venues", component: Venues },
-      { path: "/profile", name: "Profile", component: Profile },
+      { path: "/profile", name: "Profile", component: Profile, meta: { requiresAuth: true } },
     ],
-    meta: { requiresAuth: true },
   },
   {
     path: "/auth",
@@ -46,8 +45,9 @@ router.beforeEach(async (to, from, next) => {
   const { data: { session } } = await supabase.auth.getSession()
   const isAuthenticated = !!session
 
-  // Check if route requires authentication
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  // Check if route requires authentication (check both route and child meta)
+  const requiresAuth = to.meta.requiresAuth || (to.matched.some(record => record.meta.requiresAuth))
+  if (requiresAuth && !isAuthenticated) {
     next({ name: 'Login' })
     return
   }

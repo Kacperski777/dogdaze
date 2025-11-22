@@ -16,16 +16,17 @@
             </p>
             <div class="flex flex-wrap gap-4">
               <router-link
-                to="/venues"
+                to="/auth/signup"
                 class="px-8 py-4 bg-white text-emerald-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              >
+                Sign Up
+              </router-link>
+              <router-link
+                to="/venues"
+                class="px-8 py-4 bg-emerald-600 bg-opacity-30 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white hover:bg-opacity-50 transition-all duration-200"
               >
                 Explore Venues
               </router-link>
-              <button
-                class="px-8 py-4 bg-emerald-600 bg-opacity-30 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white hover:bg-opacity-50 transition-all duration-200"
-              >
-                Learn More
-              </button>
             </div>
           </div>
           <div class="hidden lg:block animate-float">
@@ -127,10 +128,10 @@
             Join thousands of dog lovers discovering amazing places across the UK
           </p>
           <router-link
-            to="/venues"
+            to="/auth/signup"
             class="inline-block px-8 py-4 bg-white text-emerald-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
           >
-            Browse Venues
+            Sign Up Now!
           </router-link>
         </div>
       </div>
