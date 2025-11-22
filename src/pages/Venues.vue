@@ -46,9 +46,14 @@
       <div :class="['overflow-y-auto bg-gray-50', showMap ? 'hidden md:block w-full md:w-1/2 lg:w-2/5' : 'block w-full md:w-1/2 lg:w-2/5']">
         <div class="p-4 space-y-4">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-bold" style="font-family: var(--font-display);">
-              {{ filteredVenues.length }} Venues Found
-            </h2>
+            <div>
+              <h2 class="text-2xl font-bold" style="font-family: var(--font-display);">
+                {{ filteredVenues.length }} Venues Found
+              </h2>
+              <p v-if="!user" class="text-sm text-gray-600 mt-1">
+                Showing first 3 venues. <router-link to="/auth/signup" class="text-emerald-600 hover:text-emerald-700 font-medium">Sign up</router-link> to view all {{ filteredVenues.length }} venues.
+              </p>
+            </div>
             <button
               @click="showMap = !showMap"
               class="md:hidden px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition"
@@ -59,14 +64,39 @@
 
           <!-- Venue Cards -->
           <div
-            v-for="venue in filteredVenues"
+            v-for="(venue, index) in filteredVenues"
             :key="venue.id"
-            @click="selectVenue(venue)"
+            @click="!isBlurred(venue, index) && selectVenue(venue)"
             :class="[
-              'bg-white rounded-xl shadow-md p-6 cursor-pointer transition-all duration-200 hover:shadow-xl transform hover:scale-[1.02]',
-              selectedVenue?.id === venue.id ? 'ring-2 ring-emerald-500' : ''
+              'bg-white rounded-xl shadow-md p-6 transition-all duration-200 relative',
+              selectedVenue?.id === venue.id ? 'ring-2 ring-emerald-500' : '',
+              isBlurred(venue, index) ? 'cursor-default' : 'cursor-pointer hover:shadow-xl transform hover:scale-[1.02]'
             ]"
           >
+            <!-- Blur Overlay for non-logged-in users (venues after first 3) -->
+            <div
+              v-if="isBlurred(venue, index)"
+              class="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-md rounded-xl z-10 flex flex-col items-center justify-center p-6"
+            >
+              <div class="text-center">
+                <div class="text-4xl mb-4">🔒</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2" style="font-family: var(--font-display);">
+                  Sign Up to View More Venues
+                </h3>
+                <p class="text-gray-600 text-sm mb-4">
+                  Unlock access to all {{ filteredVenues.length }} venues
+                </p>
+                <router-link
+                  to="/auth/signup"
+                  class="inline-block px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  Sign Up Free
+                </router-link>
+              </div>
+            </div>
+
+            <!-- Blurred Content -->
+            <div :class="{ 'filter blur-sm': isBlurred(venue, index) }">
             <div class="flex gap-4">
               <!-- Venue Image -->
               <div class="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br" :class="getCategoryGradient(venue.category)">
@@ -106,6 +136,7 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
 
           <!-- Empty State -->
@@ -131,10 +162,15 @@
 
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuth } from '../composables/useAuth'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 // Using custom div icons for markers (no need for default icon setup)
+
+const router = useRouter()
+const { user } = useAuth()
 
 const searchQuery = ref('')
 const selectedCategories = ref([])
@@ -142,6 +178,18 @@ const selectedVenue = ref(null)
 const showMap = ref(true)
 const map = ref(null)
 const markers = ref([])
+
+// Check if venue should be blurred (for non-logged-in users, blur venues after first 3)
+const isBlurred = (venue, index) => {
+  if (user.value) return false // Logged-in users see everything
+  return index >= 3 // First 3 venues are free, rest are blurred
+}
+
+// Get visible venues for map markers (only show first 3 for non-logged-in users)
+const visibleVenues = computed(() => {
+  if (user.value) return filteredVenues.value
+  return filteredVenues.value.slice(0, 3)
+})
 
 // Sample venues data (replace with Supabase data later)
 const venues = ref([
@@ -320,8 +368,8 @@ const updateMarkers = () => {
 
   if (!map.value) return
 
-  // Add markers for filtered venues
-  filteredVenues.value.forEach(venue => {
+  // Add markers only for visible venues (first 3 for non-logged-in users)
+  visibleVenues.value.forEach(venue => {
     // Create custom icon with emoji
     const customIcon = L.divIcon({
       className: 'custom-marker',
@@ -354,10 +402,15 @@ const updateMarkers = () => {
   })
 }
 
-// Watch for filtered venues changes and update markers
-watch(filteredVenues, () => {
+// Watch for visible venues changes and update markers
+watch(visibleVenues, () => {
   updateMarkers()
 }, { deep: true })
+
+// Also watch user auth state to update markers when user logs in
+watch(() => user.value, () => {
+  updateMarkers()
+})
 
 onMounted(() => {
   initMap()
