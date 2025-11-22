@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50 text-gray-800">
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-emerald-50 text-gray-800">
     <Navbar />
     <main class="flex-1 container mx-auto px-4 py-8">
-         <router-view />
+      <router-view />
     </main>
     <Footer />
   </div>
