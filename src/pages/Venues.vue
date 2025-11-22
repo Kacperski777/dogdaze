@@ -191,6 +191,18 @@ const visibleVenues = computed(() => {
   return filteredVenues.value.slice(0, 3)
 })
 
+const getCategoryColor = (category) => {
+  const categoryMap = {
+    'Restaurants': '#f59e0b',
+    'Pubs & Bars': '#10b981',
+    'Groomers': '#ec4899',
+    'Experiences': '#8b5cf6',
+    'Coffee Houses': '#d97706',
+    'Parks': '#84cc16'
+  }
+  return categoryMap[category] || '#84cc16'
+}
+
 // Sample venues data (replace with Supabase data later)
 const venues = ref([
   {
@@ -352,10 +364,10 @@ const initMap = async () => {
   map.value = L.map('map').setView(defaultCenter, 12)
 
   // Add OpenStreetMap tiles
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
-  }).addTo(map.value)
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+  attribution: '© Stadia Maps © OpenMapTiles © OpenStreetMap contributors',
+  maxZoom: 20,
+}).addTo(map.value)
 
   // Add markers for all venues
   updateMarkers()
@@ -374,7 +386,7 @@ const updateMarkers = () => {
     const customIcon = L.divIcon({
       className: 'custom-marker',
       html: `<div style="
-        background-color: #10b981;
+        background-color: ${getCategoryColor(venue.category)};
         width: 40px;
         height: 40px;
         border-radius: 50%;
