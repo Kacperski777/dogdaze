@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-screen">
+  <!-- Show Dashboard for logged-in users, landing page for guests -->
+  <Dashboard v-if="user" />
+  <div v-else class="min-h-screen">
     <!-- Hero Section -->
     <section class="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 text-white py-20 lg:py-32">
       <div class="absolute inset-0 bg-black opacity-10"></div>
@@ -141,7 +143,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAuth } from '../composables/useAuth'
+import Dashboard from './Dashboard.vue'
 import anime from 'animejs/lib/anime.es.js'
+
+const { user } = useAuth()
 
 const features = ref([
   {
