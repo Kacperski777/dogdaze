@@ -66,7 +66,7 @@
           <div
             v-for="(venue, index) in filteredVenues"
             :key="venue.id"
-            @click="!isBlurred(venue, index) && selectVenue(venue)"
+            @click="!isBlurred(venue, index) && goToVenueDetails(venue)"
             :class="[
               'bg-white rounded-xl shadow-md p-6 transition-all duration-200 relative',
               selectedVenue?.id === venue.id ? 'ring-2 ring-emerald-500' : '',
@@ -171,6 +171,10 @@ import 'leaflet/dist/leaflet.css'
 
 const router = useRouter()
 const { user } = useAuth()
+
+const goToVenueDetails = (venue) => {
+  router.push({ name: 'VenueDetails', params: { id: venue.id } })
+}
 
 const searchQuery = ref('')
 const selectedCategories = ref([])
