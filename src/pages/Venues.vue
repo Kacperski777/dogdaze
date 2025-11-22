@@ -99,7 +99,7 @@
             <div :class="{ 'filter blur-sm': isBlurred(venue, index) }">
             <div class="flex gap-4">
               <!-- Venue Image -->
-              <div class="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br" :class="getCategoryGradient(venue.category)">
+              <div @click="redirectToVenue(venue)" class="cursor-pointer w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br" :class="getCategoryGradient(venue.category)">
                 <div class="w-full h-full flex items-center justify-center text-4xl">
                   {{ getCategoryIcon(venue.category) }}
                 </div>
@@ -178,6 +178,10 @@ const selectedVenue = ref(null)
 const showMap = ref(true)
 const map = ref(null)
 const markers = ref([])
+
+function redirectToVenue(venue) {
+  router.push(`/venues/${venue.id}`)
+}
 
 // Check if venue should be blurred (for non-logged-in users, blur venues after first 3)
 const isBlurred = (venue, index) => {
