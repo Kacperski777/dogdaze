@@ -25,9 +25,15 @@
               </router-link>
               <router-link
                 to="/venues"
-                class="px-8 py-4 bg-emerald-600 bg-opacity-30 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white hover:bg-opacity-50 transition-all duration-200"
+                class="px-8 py-4 bg-transparent bg-opacity-30 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white hover:bg-opacity-50 transition-all duration-200"
               >
                 Explore Venues
+              </router-link>
+              <router-link
+                to="/advertise-your-venue"
+                class="px-8 py-4 bg-cyan-600-600 bg-opacity-30 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white hover:bg-opacity-50 transition-all duration-200"
+              >
+                Advertise Your Venue
               </router-link>
             </div>
           </div>

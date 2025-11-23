@@ -8,6 +8,7 @@ import Login from "../pages/Login.vue";
 import Signup from "../pages/Signup.vue";
 import Profile from "../pages/Profile.vue";
 import VenueDetails from "../pages/VenueDetails.vue";
+import AdvertiseVenue from "../pages/AdvertiseVenue.vue";
 import NotFound from "../pages/NotFound.vue"
 
 const routes = [
@@ -19,6 +20,7 @@ const routes = [
       { path: "/venues", name: "Venues", component: Venues },
       { path: "/venues/:id", name: "VenueDetails", component: VenueDetails },
       { path: "/profile", name: "Profile", component: Profile, meta: { requiresAuth: true } },
+      { path: "/advertise-your-venue", name: "AdvertiseVenue", component: AdvertiseVenue },
     ],
   },
   {
